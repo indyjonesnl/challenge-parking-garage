@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {% if garage is not defined or garage is empty %}
+        <p>Current garage: None</p>
+
+        <form action="{{ url('app_parking_new') }}" method="post">
+            <div class="mb-3">
+                <label class="form-label">
+                    Floors:
+                    <input id="floors" name="floors" type="number" value="3" class="form-control"/>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">
+                    ParkingSpots on first floor:
+                    <input id="spots" name="spots" type="number" value="4" class="form-control"/>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    {% else %}
+        <p>
+            Current garage: {{ garage }}
+            <a href="{{ url('app_parking_clear') }}" style="color: lightcoral">Clear current garage</a>
+        </p>
+        <p>Total parking capacity: {{ garage.status }}</p>
+        <br/>
+
+        {% if app.request.hasPreviousSession %}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <p>Is there a parking spot for a</p>
+        <a class="btn btn-primary" href="{{ url('app_parking_check', {vehicleType: 'motorcycle'}) }}">Motorcycle</a>
+        <a class="btn btn-primary" href="{{ url('app_parking_check', {vehicleType: 'car'}) }}">Car</a>
+        <a class="btn btn-primary" href="{{ url('app_parking_check', {vehicleType: 'van'}) }}">Van</a>
+        <br/>
+        <br/>
+
+        <p>Park a vehicle:</p>
+        <a class="btn btn-primary" href="{{ url('app_parking_park', {vehicleType: 'motorcycle'}) }}">Motorcycle</a>
+        <a class="btn btn-primary" href="{{ url('app_parking_park', {vehicleType: 'car'}) }}">Car</a>
+        <a class="btn btn-primary" href="{{ url('app_parking_park', {vehicleType: 'van'}) }}">Van</a>
+    {% endif %}
+{% endblock %}
